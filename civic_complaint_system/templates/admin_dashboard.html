@@ -1,0 +1,447 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Civic Complaint Management System{% endblock %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-1">
+                <i class="bi bi-speedometer2 text-primary"></i>
+                Administration Dashboard
+            </h2>
+            <p class="text-muted mb-0">System overview and management controls</p>
+        </div>
+        <div class="col-auto">
+            <div class="btn-group">
+                <a href="{{ url_for('admin.users') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-people"></i> Manage Users
+                </a>
+                <a href="{{ url_for('admin.reports') }}" class="btn btn-outline-success">
+                    <i class="bi bi-file-earmark-text"></i> Generate Reports
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Statistics -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4 class="mb-3">System Overview</h4>
+        </div>
+        <!-- User Statistics -->
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ total_users }}</h4>
+                            <p class="mb-0">Total Users</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-people-fill" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ citizens_count }}</h4>
+                            <p class="mb-0">Citizens</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-person" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ officers_count }}</h4>
+                            <p class="mb-0">Officers</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-shield-check" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-dark h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ admins_count }}</h4>
+                            <p class="mb-0">Admins</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-gear-fill" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Complaint Statistics -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4 class="mb-3">Complaint Statistics</h4>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="card bg-secondary text-white h-100">
+                <div class="card-body text-center">
+                    <h4 class="mb-0">{{ total_complaints }}</h4>
+                    <p class="mb-0">Total</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="card bg-warning text-white h-100">
+                <div class="card-body text-center">
+                    <h4 class="mb-0">{{ submitted_count }}</h4>
+                    <p class="mb-0">Submitted</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body text-center">
+                    <h4 class="mb-0">{{ in_progress_count }}</h4>
+                    <p class="mb-0">In Progress</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body text-center">
+                    <h4 class="mb-0">{{ resolved_count }}</h4>
+                    <p class="mb-0">Resolved</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="card bg-danger text-white h-100">
+                <div class="card-body text-center">
+                    <h4 class="mb-0">{{ rejected_count }}</h4>
+                    <p class="mb-0">Rejected</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="card bg-dark text-white h-100">
+                <div class="card-body text-center">
+                    <h4 class="mb-0">{{ unassigned_count }}</h4>
+                    <p class="mb-0">Unassigned</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Department Performance -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-building"></i>
+                        Department Performance
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if department_stats %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Department</th>
+                                        <th>Complaints</th>
+                                        <th>Performance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for dept, count in department_stats %}
+                                    <tr>
+                                        <td>{{ dept|get_department_name }}</td>
+                                        <td>
+                                            <span class="badge bg-primary">{{ count }}</span>
+                                        </td>
+                                        <td>
+                                            {% if count > 10 %}
+                                                <span class="badge bg-success">High Load</span>
+                                            {% elif count > 5 %}
+                                                <span class="badge bg-warning">Medium Load</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Low Load</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center">No department data available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Trends -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-graph-up"></i>
+                        Category Trends
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if category_trends %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Total</th>
+                                        <th>Resolved</th>
+                                        <th>Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for category, total, resolved in category_trends %}
+                                    <tr>
+                                        <td>{{ category|get_category_name }}</td>
+                                        <td>
+                                            <span class="badge bg-primary">{{ total }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-success">{{ resolved }}</span>
+                                        </td>
+                                        <td>
+                                            {% if total > 0 %}
+                                                {% set rate = (resolved / total * 100)|round(1) %}
+                                                {% if rate >= 80 %}
+                                                    <span class="badge bg-success">{{ rate }}%</span>
+                                                {% elif rate >= 60 %}
+                                                    <span class="badge bg-warning">{{ rate }}%</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">{{ rate }}%</span>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="badge bg-secondary">0%</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center">No category data available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trend Analysis & Recent Activity -->
+    <div class="row mb-4">
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        Complaint Trends (Last 7 Days)
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="trendsChart" width="400" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-activity"></i>
+                        Recent Activity (Last 7 Days)
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-12 mb-3">
+                            <h3 class="text-primary">{{ recent_complaints }}</h3>
+                            <p class="mb-0">New Complaints</p>
+                            <small class="text-muted">Submitted in last 7 days</small>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <h3 class="text-success">{{ recent_resolutions }}</h3>
+                            <p class="mb-0">Resolutions</p>
+                            <small class="text-muted">Completed in last 7 days</small>
+                        </div>
+                    </div>
+                    {% if recent_complaints > 0 %}
+                        <div class="progress" style="height: 10px;">
+                            {% if recent_complaints > 0 %}
+                                {% set resolution_rate = (recent_resolutions / recent_complaints * 100) %}
+                                <div class="progress-bar bg-success" style="width: {{ resolution_rate }}%">
+                                    {{ resolution_rate|round(1) }}% Resolution Rate
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-lightning"></i>
+                        Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        {% if unassigned_count > 0 %}
+                            <a href="{{ url_for('admin.all_complaints', department_filter='all', status_filter='submitted') }}"
+                               class="btn btn-warning me-md-2">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                Assign {{ unassigned_count }} Unassigned Complaints
+                            </a>
+                        {% endif %}
+                        <a href="{{ url_for('admin.users') }}" class="btn btn-outline-primary me-md-2">
+                            <i class="bi bi-person-plus"></i> Add New Municipal Officer
+                        </a>
+                        <a href="{{ url_for('admin.reports') }}" class="btn btn-outline-success me-md-2">
+                            <i class="bi bi-download"></i> Generate Monthly Report
+                        </a>
+                        <a href="{{ url_for('admin.all_complaints') }}" class="btn btn-outline-info">
+                            <i class="bi bi-list-ul"></i> View All Complaints
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('trendsChart').getContext('2d');
+
+    // Prepare data for Chart.js
+    const submissionData = {{ submission_trends|tojson }};
+    const resolutionData = {{ resolution_trends|tojson }};
+    const rejectedData = {{ rejected_trends|tojson }};
+    const inProgressData = {{ in_progress_trends|tojson }};
+
+    // Create date labels for last 7 days
+    const labels = [];
+    const today = new Date();
+    for (let i = 6; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(today.getDate() - i);
+        labels.push(date.toISOString().split('T')[0]);
+    }
+
+    // Map data to labels
+    const submissionCounts = labels.map(label => {
+        const found = submissionData.find(item => item.date === label);
+        return found ? found.count : 0;
+    });
+
+    const resolutionCounts = labels.map(label => {
+        const found = resolutionData.find(item => item.date === label);
+        return found ? found.count : 0;
+    });
+
+    const rejectedCounts = labels.map(label => {
+        const found = rejectedData.find(item => item.date === label);
+        return found ? found.count : 0;
+    });
+
+    const inProgressCounts = labels.map(label => {
+        const found = inProgressData.find(item => item.date === label);
+        return found ? found.count : 0;
+    });
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Complaints Submitted',
+                data: submissionCounts,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1
+            }, {
+                label: 'Complaints Resolved',
+                data: resolutionCounts,
+                borderColor: 'rgb(54, 162, 235)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                tension: 0.1
+            }, {
+                label: 'Complaints In Progress',
+                data: inProgressCounts,
+                borderColor: 'rgb(255, 205, 86)',
+                backgroundColor: 'rgba(255, 205, 86, 0.2)',
+                tension: 0.1
+            }, {
+                label: 'Complaints Rejected',
+                data: rejectedCounts,
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Daily Complaint Trends'
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Complaints'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

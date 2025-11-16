@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block title %}Help & FAQ - Civic Complaint Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary mb-4">
+                    <i class="bi bi-question-circle"></i> Help Center
+                </h1>
+                <p class="lead text-muted">
+                    Find answers to common questions and learn how to use the Civic Complaint System effectively.
+                </p>
+            </div>
+
+            <!-- Quick Start Guide -->
+            <div class="card shadow-sm mb-5">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="h4 mb-0">
+                        <i class="bi bi-rocket"></i> Quick Start Guide
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-3 text-center mb-4">
+                            <div class="step-icon bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">1</div>
+                            <h5>Register</h5>
+                            <p class="text-muted small">Create your account with email and password</p>
+                        </div>
+                        <div class="col-md-3 text-center mb-4">
+                            <div class="step-icon bg-success text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">2</div>
+                            <h5>Login</h5>
+                            <p class="text-muted small">Access your personalized dashboard</p>
+                        </div>
+                        <div class="col-md-3 text-center mb-4">
+                            <div class="step-icon bg-warning text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">3</div>
+                            <h5>Report</h5>
+                            <p class="text-muted small">Submit complaints with photos and details</p>
+                        </div>
+                        <div class="col-md-3 text-center mb-4">
+                            <div class="step-icon bg-info text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">4</div>
+                            <h5>Track</h5>
+                            <p class="text-muted small">Monitor progress and receive updates</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <h3 class="h4 mb-0">
+                                <i class="bi bi-question-circle"></i> Frequently Asked Questions
+                            </h3>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="accordion" id="helpAccordion">
+
+                                <!-- Getting Started -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#getting-started">
+                                            <i class="bi bi-person-plus me-2"></i> Getting Started
+                                        </button>
+                                    </h2>
+                                    <div id="getting-started" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
+                                        <div class="accordion-body">
+                                            <h6>How do I create an account?</h6>
+                                            <p>Click "Register" in the navigation bar. Fill out the form with your name, email, and password. You'll be asked to select your role (Citizen, Municipal Officer, or Administrator).</p>
+
+                                            <h6>What roles are available?</h6>
+                                            <ul>
+                                                <li><strong>Citizen:</strong> Submit and track complaints</li>
+                                                <li><strong>Municipal Officer:</strong> Manage assigned complaints by department</li>
+                                                <li><strong>Administrator:</strong> Full system access and user management</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Submitting Complaints -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#submitting-complaints">
+                                            <i class="bi bi-plus-circle me-2"></i> Submitting Complaints
+                                        </button>
+                                    </h2>
+                                    <div id="submitting-complaints" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                                        <div class="accordion-body">
+                                            <h6>How do I submit a complaint?</h6>
+                                            <p>After logging in, go to your dashboard and click "Submit New Complaint". Fill out the form with:</p>
+                                            <ul>
+                                                <li>Category (Potholes, Street Light, Garbage, etc.)</li>
+                                                <li>Description of the issue</li>
+                                                <li>Address and landmark</li>
+                                                <li>Priority level</li>
+                                                <li>Up to 5 photos (max 5MB each)</li>
+                                            </ul>
+
+                                            <h6>What categories are available?</h6>
+                                            <ul>
+                                                <li>Potholes & Road Damage</li>
+                                                <li>Street Light Issues</li>
+                                                <li>Garbage Collection</li>
+                                                <li>Water Supply Issues</li>
+                                                <li>Drainage Problems</li>
+                                                <li>Other Issues</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tracking Complaints -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tracking-complaints">
+                                            <i class="bi bi-eye me-2"></i> Tracking Complaints
+                                        </button>
+                                    </h2>
+                                    <div id="tracking-complaints" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                                        <div class="accordion-body">
+                                            <h6>How do I check my complaint status?</h6>
+                                            <p>Visit your dashboard to see all your complaints. Click on any complaint to view detailed information, status updates, and assigned officer.</p>
+
+                                            <h6>What do the status badges mean?</h6>
+                                            <ul>
+                                                <li><span class="badge bg-secondary">Submitted</span> - Complaint received</li>
+                                                <li><span class="badge bg-warning">In Progress</span> - Being worked on</li>
+                                                <li><span class="badge bg-success">Resolved</span> - Issue fixed</li>
+                                                <li><span class="badge bg-danger">Rejected</span> - Complaint denied</li>
+                                            </ul>
+
+                                            <h6>How long does resolution take?</h6>
+                                            <p>Most complaints are resolved within 7-14 days, but complex issues may take longer. You'll receive status updates throughout the process.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- For Municipal Officers -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#municipal-officers">
+                                            <i class="bi bi-person-badge me-2"></i> For Municipal Officers
+                                        </button>
+                                    </h2>
+                                    <div id="municipal-officers" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                                        <div class="accordion-body">
+                                            <h6>How do I manage assigned complaints?</h6>
+                                            <p>Your dashboard shows complaints assigned to your department. You can:</p>
+                                            <ul>
+                                                <li>Update complaint status</li>
+                                                <li>Add notes and resolution details</li>
+                                                <li>View citizen-submitted photos</li>
+                                                <li>Filter complaints by status and priority</li>
+                                            </ul>
+
+                                            <h6>How are complaints assigned?</h6>
+                                            <p>The system automatically assigns complaints to officers in the relevant department with the fewest active complaints.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- For Administrators -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#administrators">
+                                            <i class="bi bi-gear me-2"></i> For Administrators
+                                        </button>
+                                    </h2>
+                                    <div id="administrators" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                                        <div class="accordion-body">
+                                            <h6>What can I do as an administrator?</h6>
+                                            <ul>
+                                                <li>View system-wide statistics and analytics</li>
+                                                <li>Manage all users (create, edit, deactivate)</li>
+                                                <li>Generate reports with filters</li>
+                                                <li>View and manage all complaints</li>
+                                                <li>Assign roles and departments to users</li>
+                                            </ul>
+
+                                            <h6>How do I generate reports?</h6>
+                                            <p>Go to the Reports section in your admin dashboard. You can filter by date range, status, category, and department, then export to CSV.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Technical Issues -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#technical-issues">
+                                            <i class="bi bi-tools me-2"></i> Technical Issues
+                                        </button>
+                                    </h2>
+                                    <div id="technical-issues" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                                        <div class="accordion-body">
+                                            <h6>Photo upload isn't working</h6>
+                                            <p>Ensure your photos are under 5MB each and in JPG, PNG, or GIF format. Try refreshing the page and attempting again.</p>
+
+                                            <h6>I can't log in</h6>
+                                            <p>Check that your email and password are correct. Passwords are case-sensitive. If you've forgotten your password, contact an administrator.</p>
+
+                                            <h6>The page isn't loading</h6>
+                                            <p>Try refreshing the page. If the problem persists, clear your browser cache or try a different browser.</p>
+
+                                            <h6>Mobile app?</h6>
+                                            <p>This is a web-based system that works on all devices. For the best experience, use a modern web browser on your mobile device.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Sidebar -->
+                <div class="col-lg-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body text-center p-4">
+                            <i class="bi bi-headset text-primary" style="font-size: 3rem;"></i>
+                            <h5 class="mt-3">Need More Help?</h5>
+                            <p class="text-muted mb-4">Can't find what you're looking for? Contact our support team.</p>
+                            <a href="{{ url_for('main.contact') }}" class="btn btn-primary">
+                                <i class="bi bi-envelope"></i> Contact Support
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">
+                                <i class="bi bi-lightbulb"></i> Tips & Tricks
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-3">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    <strong>Be specific:</strong> Include exact addresses and clear descriptions
+                                </li>
+                                <li class="mb-3">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    <strong>Add photos:</strong> Visual evidence helps resolve issues faster
+                                </li>
+                                <li class="mb-3">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    <strong>Check regularly:</strong> Monitor your dashboard for status updates
+                                </li>
+                                <li class="mb-3">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    <strong>Use correct category:</strong> This ensures proper department assignment
+                                </li>
+                                <li class="mb-0">
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    <strong>Stay patient:</strong> Complex issues may take time to resolve
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

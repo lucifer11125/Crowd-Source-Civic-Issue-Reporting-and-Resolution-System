@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}Reports - Civic Complaint Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-1">
+                <i class="bi bi-file-earmark-text text-primary"></i>
+                Generate Reports
+            </h2>
+            <p class="text-muted mb-0">Create and export system reports</p>
+        </div>
+    </div>
+
+    <!-- Report Filters -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-funnel"></i>
+                        Report Filters
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="GET">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label for="start_date" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="start_date" name="start_date"
+                                       value="{{ start_date }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="end_date" class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="end_date" name="end_date"
+                                       value="{{ end_date }}">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="status_filter" class="form-label">Status</label>
+                                <select class="form-select" id="status_filter" name="status">
+                                    <option value="all" {{ 'selected' if status_filter == 'all' else '' }}>All Status</option>
+                                    <option value="submitted" {{ 'selected' if status_filter == 'submitted' else '' }}>Submitted</option>
+                                    <option value="in_progress" {{ 'selected' if status_filter == 'in_progress' else '' }}>In Progress</option>
+                                    <option value="resolved" {{ 'selected' if status_filter == 'resolved' else '' }}>Resolved</option>
+                                    <option value="rejected" {{ 'selected' if status_filter == 'rejected' else '' }}>Rejected</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="category_filter" class="form-label">Category</label>
+                                <select class="form-select" id="category_filter" name="category">
+                                    <option value="all" {{ 'selected' if category_filter == 'all' else '' }}>All Categories</option>
+                                    <option value="potholes" {{ 'selected' if category_filter == 'potholes' else '' }}>Potholes</option>
+                                    <option value="streetlight" {{ 'selected' if category_filter == 'streetlight' else '' }}>Street Light</option>
+                                    <option value="garbage" {{ 'selected' if category_filter == 'garbage' else '' }}>Garbage</option>
+                                    <option value="water_supply" {{ 'selected' if category_filter == 'water_supply' else '' }}>Water Supply</option>
+                                    <option value="drainage" {{ 'selected' if category_filter == 'drainage' else '' }}>Drainage</option>
+                                    <option value="other" {{ 'selected' if category_filter == 'other' else '' }}>Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="department_filter" class="form-label">Department</label>
+                                <select class="form-select" id="department_filter" name="department">
+                                    <option value="all" {{ 'selected' if department_filter == 'all' else '' }}>All Departments</option>
+                                    {% for dept in departments %}
+                                        <option value="{{ dept }}" {{ 'selected' if department_filter == dept else '' }}>
+                                            {{ dept|get_department_name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <div class="btn-group">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-search"></i> Apply Filters
+                                    </button>
+                                    <a href="{{ url_for('admin.reports') }}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-clockwise"></i> Reset
+                                    </a>
+                                    <button type="submit" name="export" value="csv" class="btn btn-success">
+                                        <i class="bi bi-file-earmark-spreadsheet"></i> Export CSV
+                                    </button>
+                                    <button type="submit" name="export" value="excel" class="btn btn-success">
+                                        <i class="bi bi-file-earmark-excel"></i> Export Excel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Results -->
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clipboard-data"></i>
+                        Report Results
+                        <span class="badge bg-primary ms-2">{{ complaints|length }} complaints</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if complaints %}
+                        <!-- Summary Statistics -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body text-center">
+                                        <h4>{{ complaints|length }}</h4>
+                                        <p class="mb-0">Total Complaints</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body text-center">
+                                        <h4>{{ complaints|selectattr('status', 'equalto', 'resolved')|list|length }}</h4>
+                                        <p class="mb-0">Resolved</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body text-center">
+                                        <h4>{{ complaints|selectattr('status', 'equalto', 'in_progress')|list|length }}</h4>
+                                        <p class="mb-0">In Progress</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body text-center">
+                                        {% set resolved_count = complaints|selectattr('status', 'equalto', 'resolved')|list|length %}
+                                        <h4>
+                                            {% if complaints|length > 0 %}
+                                                {{ ((resolved_count / complaints|length) * 100)|round(1) }}%
+                                            {% else %}
+                                                0%
+                                            {% endif %}
+                                        </h4>
+                                        <p class="mb-0">Resolution Rate</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Results Table -->
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover" id="reportTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Date</th>
+                                        <th>Citizen</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th>Assigned To</th>
+                                        <th>Priority</th>
+                                        <th>Address</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for complaint in complaints %}
+                                    <tr>
+                                        <td><strong>#{{ complaint.id }}</strong></td>
+                                        <td>{{ complaint.created_at|datetime('%Y-%m-%d') }}</td>
+                                        <td>{{ complaint.user.name }}</td>
+                                        <td>{{ complaint.category|get_category_name }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ complaint.status|status_badge_class }}">
+                                                {{ complaint.status.replace('_', ' ').title() }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if complaint.assigned_officer %}
+                                                {{ complaint.assigned_officer.name }}
+                                            {% else %}
+                                                <span class="text-muted">Unassigned</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ complaint.priority|priority_badge_class }}">
+                                                {{ complaint.priority.title() }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <small>{{ complaint.address[:30] }}{% if complaint.address|length > 30 %}...{% endif %}</small>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-file-earmark-text text-muted" style="font-size: 4rem;"></i>
+                            <h5 class="mt-3 text-muted">No data found</h5>
+                            <p class="text-muted">
+                                No complaints match the current filters. Try adjusting the filter criteria.
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Export functionality
+document.querySelectorAll('button[name="export"]').forEach(button => {
+    button.addEventListener('click', function(e) {
+        const exportType = this.value;
+        const confirmMessage = exportType === 'csv' ?
+            'Export the current filtered data to CSV?' :
+            'Export the current filtered data to Excel?';
+
+        if (confirm(confirmMessage)) {
+            // Form will submit normally
+            showMessage(`Generating ${exportType.toUpperCase()} report...`, 'info');
+        } else {
+            e.preventDefault();
+        }
+    });
+});
+
+// Quick date range selectors
+function setDateRange(days) {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - days);
+
+    document.getElementById('start_date').value = startDate.toISOString().split('T')[0];
+    document.getElementById('end_date').value = endDate.toISOString().split('T')[0];
+}
+
+// Add quick date range buttons (optional enhancement)
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const filterRow = form.querySelector('.row');
+
+    const quickDatesHtml = `
+        <div class="col-12 mt-3">
+            <small class="text-muted">Quick ranges: </small>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setDateRange(7)">Last 7 days</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setDateRange(30)">Last 30 days</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setDateRange(90)">Last 3 months</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setDateRange(365)">Last year</button>
+        </div>
+    `;
+
+    filterRow.insertAdjacentHTML('afterend', quickDatesHtml);
+});
+</script>
+{% endblock %}

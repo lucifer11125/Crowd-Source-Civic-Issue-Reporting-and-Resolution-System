@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Civic Complaint Management System{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-person-plus text-primary" style="font-size: 3rem;"></i>
+                        <h3 class="mt-2">Create Account</h3>
+                        <p class="text-muted">Join our civic complaint management system</p>
+                    </div>
+
+                    <form method="POST" id="registrationForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Full Name *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           value="{{ name or '' }}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                           value="{{ email or '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">Password *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="form-text">Minimum 8 characters with uppercase, lowercase, and numbers</div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="confirm_password" class="form-label">Confirm Password *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="role" class="form-label">Account Type *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                                    <select class="form-select" id="role" name="role" required>
+                                        <option value="">Select Role</option>
+                                        <option value="citizen" {{ 'selected' if role == 'citizen' else '' }}>Citizen</option>
+                                        <option value="municipal" {{ 'selected' if role == 'municipal' else '' }}>Municipal Officer</option>
+                                        <option value="admin" {{ 'selected' if role == 'admin' else '' }}>Administrator</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="department" class="form-label">Department</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-building"></i></span>
+                                    <select class="form-select" id="department" name="department">
+                                        <option value="">Select Department</option>
+                                        <option value="roads" {{ 'selected' if department == 'roads' else '' }}>Roads & Transportation</option>
+                                        <option value="water" {{ 'selected' if department == 'water' else '' }}>Water Supply & Drainage</option>
+                                        <option value="sanitation" {{ 'selected' if department == 'sanitation' else '' }}>Sanitation & Waste Management</option>
+                                        <option value="general" {{ 'selected' if department == 'general' else '' }}>General Administration</option>
+                                    </select>
+                                </div>
+                                <div class="form-text">Required for Municipal Officers and Admins</div>
+                            </div>
+                        </div>
+
+                        <!-- Password Strength Indicator -->
+                        <div class="mb-3">
+                            <label class="form-label">Password Strength</label>
+                            <div class="progress" style="height: 5px;">
+                                <div class="progress-bar" id="passwordStrength" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <small class="form-text" id="passwordStrengthText">Enter a password to see strength</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3" id="registerBtn">
+                            <i class="bi bi-person-plus"></i> Create Account
+                        </button>
+
+                        <div class="text-center">
+                            <p class="mb-0">
+                                Already have an account?
+                                <a href="{{ url_for('auth.login') }}" class="text-decoration-none">Login here</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Terms and Conditions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>1. Account Registration</h6>
+                <p>You must provide accurate information when registering. You are responsible for maintaining the confidentiality of your account credentials.</p>
+
+                <h6>2. Acceptable Use</h6>
+                <p>Use this system responsibly. Submit legitimate complaints only. False or malicious complaints may result in account termination.</p>
+
+                <h6>3. Privacy</h6>
+                <p>Your personal information will be used solely for the purpose of managing civic complaints. We do not share your information with third parties without consent.</p>
+
+                <h6>4. Content</h6>
+                <p>By submitting complaints, you grant the municipality the right to use the information for resolving civic issues.</p>
+
+                <h6>5. Account Termination</h6>
+                <p>We reserve the right to terminate accounts that violate these terms or misuse the system.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Toggle password visibility
+document.getElementById('togglePassword').addEventListener('click', function() {
+    const passwordInput = document.getElementById('password');
+    const icon = this.querySelector('i');
+
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+    }
+});
+
+// Password strength checker
+document.getElementById('password').addEventListener('input', function() {
+    const password = this.value;
+    const strengthBar = document.getElementById('passwordStrength');
+    const strengthText = document.getElementById('passwordStrengthText');
+
+    let strength = 0;
+    let feedback = '';
+
+    if (password.length >= 8) strength += 25;
+    if (password.length >= 12) strength += 25;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 25;
+    if (/\d/.test(password)) strength += 12.5;
+    if (/[^a-zA-Z\d]/.test(password)) strength += 12.5;
+
+    if (password.length === 0) {
+        strengthBar.style.width = '0%';
+        strengthBar.className = 'progress-bar';
+        strengthText.textContent = 'Enter a password to see strength';
+        strengthText.className = 'form-text';
+    } else if (strength < 30) {
+        strengthBar.style.width = strength + '%';
+        strengthBar.className = 'progress-bar bg-danger';
+        strengthText.textContent = 'Weak password';
+        strengthText.className = 'form-text text-danger';
+    } else if (strength < 60) {
+        strengthBar.style.width = strength + '%';
+        strengthBar.className = 'progress-bar bg-warning';
+        strengthText.textContent = 'Medium strength';
+        strengthText.className = 'form-text text-warning';
+    } else {
+        strengthBar.style.width = strength + '%';
+        strengthBar.className = 'progress-bar bg-success';
+        strengthText.textContent = 'Strong password';
+        strengthText.className = 'form-text text-success';
+    }
+});
+
+// Department field requirement based on role
+document.getElementById('role').addEventListener('change', function() {
+    const departmentField = document.getElementById('department');
+    const departmentGroup = departmentField.closest('.mb-3');
+
+    if (this.value === 'municipal' || this.value === 'admin') {
+        departmentField.required = true;
+        departmentGroup.querySelector('label').innerHTML = 'Department *';
+        departmentGroup.querySelector('.form-text').style.display = 'block';
+    } else {
+        departmentField.required = false;
+        departmentGroup.querySelector('label').innerHTML = 'Department';
+        departmentGroup.querySelector('.form-text').style.display = 'none';
+        departmentField.value = '';
+    }
+});
+
+// Form validation
+document.getElementById('registrationForm').addEventListener('submit', function(e) {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+
+    if (password !== confirmPassword) {
+        e.preventDefault();
+        alert('Passwords do not match!');
+        return false;
+    }
+
+    if (password.length < 8) {
+        e.preventDefault();
+        alert('Password must be at least 8 characters long!');
+        return false;
+    }
+});
+</script>
+{% endblock %}

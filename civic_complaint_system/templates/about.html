@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}About - Civic Complaint Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary mb-4">
+                    <i class="bi bi-info-circle"></i> About CivicComplaint
+                </h1>
+                <p class="lead text-muted">
+                    Empowering citizens to make their communities better through efficient civic issue reporting and tracking.
+                </p>
+            </div>
+
+            <!-- Mission Section -->
+            <div class="card shadow-sm mb-5">
+                <div class="card-body p-5">
+                    <h2 class="h3 mb-4 text-center">Our Mission</h2>
+                    <p class="text-muted mb-4">
+                        CivicComplaint is dedicated to bridging the gap between citizens and municipal authorities.
+                        We believe that every citizen deserves a voice in maintaining and improving their community.
+                        Our platform provides a streamlined way to report civic issues, track their resolution,
+                        and ensure accountability in local government services.
+                    </p>
+                    <div class="row text-center">
+                        <div class="col-md-4 mb-3">
+                            <i class="bi bi-people text-primary" style="font-size: 3rem;"></i>
+                            <h5 class="mt-3">Community Focused</h5>
+                            <p class="text-muted small">Putting citizens at the center of civic improvement</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <i class="bi bi-lightning text-warning" style="font-size: 3rem;"></i>
+                            <h5 class="mt-3">Fast Resolution</h5>
+                            <p class="text-muted small">Efficient complaint processing and tracking</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <i class="bi bi-shield-check text-success" style="font-size: 3rem;"></i>
+                            <h5 class="mt-3">Transparent</h5>
+                            <p class="text-muted small">Clear visibility into complaint status and progress</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="card shadow-sm mb-5">
+                <div class="card-body p-5">
+                    <h2 class="h3 mb-4 text-center">Key Features</h2>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 me-3">
+                                    <i class="bi bi-camera text-primary" style="font-size: 2rem;"></i>
+                                </div>
+                                <div>
+                                    <h5>Photo Uploads</h5>
+                                    <p class="text-muted mb-0">Attach photos to complaints for better issue documentation</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 me-3">
+                                    <i class="bi bi-geo-alt text-success" style="font-size: 2rem;"></i>
+                                </div>
+                                <div>
+                                    <h5>Location Tracking</h5>
+                                    <p class="text-muted mb-0">Precise location information for accurate issue resolution</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 me-3">
+                                    <i class="bi bi-bar-chart text-info" style="font-size: 2rem;"></i>
+                                </div>
+                                <div>
+                                    <h5>Analytics Dashboard</h5>
+                                    <p class="text-muted mb-0">Comprehensive statistics and reporting for administrators</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 me-3">
+                                    <i class="bi bi-bell text-warning" style="font-size: 2rem;"></i>
+                                </div>
+                                <div>
+                                    <h5>Status Updates</h5>
+                                    <p class="text-muted mb-0">Real-time notifications on complaint progress</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How It Works Section -->
+            <div class="card shadow-sm mb-5">
+                <div class="card-body p-5">
+                    <h2 class="h3 mb-4 text-center">How It Works</h2>
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="step-circle bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">1</div>
+                            <h5>Report Issue</h5>
+                            <p class="text-muted small">Citizens submit complaints with details and photos</p>
+                        </div>
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="step-circle bg-success text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">2</div>
+                            <h5>Auto-Assignment</h5>
+                            <p class="text-muted small">System assigns to appropriate municipal department</p>
+                        </div>
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="step-circle bg-warning text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">3</div>
+                            <h5>Resolution</h5>
+                            <p class="text-muted small">Officers update status until issue is resolved</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="card shadow-sm">
+                <div class="card-body p-5 text-center">
+                    <h2 class="h3 mb-4">Get In Touch</h2>
+                    <p class="text-muted mb-4">
+                        Have questions or need help? We're here to assist you.
+                    </p>
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-envelope"></i> Contact Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

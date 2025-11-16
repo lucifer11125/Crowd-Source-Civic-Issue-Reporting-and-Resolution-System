@@ -1,0 +1,54 @@
+/* Civic Complaint Management System - Basic Styles */
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.btn {
+    border-radius: 0.375rem;
+}
+
+.form-control {
+    border-radius: 0.375rem;
+}
+
+.table {
+    background-color: white;
+}
+
+.alert {
+    border-radius: 0.375rem;
+}
+
+.badge {
+    font-size: 0.75em;
+}
+
+/* Status badges */
+.bg-submitted { background-color: #6c757d !important; }
+.bg-in-progress { background-color: #007bff !important; }
+.bg-resolved { background-color: #28a745 !important; }
+.bg-rejected { background-color: #dc3545 !important; }
+
+/* Priority badges */
+.bg-high { background-color: #dc3545 !important; }
+.bg-medium { background-color: #ffc107 !important; }
+.bg-low { background-color: #28a745 !important; }
+
+/* Basic responsive adjustments */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}

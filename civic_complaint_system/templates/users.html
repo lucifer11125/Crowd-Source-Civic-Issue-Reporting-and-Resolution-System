@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}User Management - Civic Complaint Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-1">
+                <i class="bi bi-people text-primary"></i>
+                User Management
+            </h2>
+            <p class="text-muted mb-0">Manage system users and their roles</p>
+        </div>
+        <div class="col-auto">
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+                <i class="bi bi-person-plus"></i> Add New User
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="role_filter" class="form-label">Filter by Role</label>
+                            <select class="form-select" id="role_filter" name="role">
+                                <option value="all" {{ 'selected' if role_filter == 'all' else '' }}>All Roles</option>
+                                <option value="citizen" {{ 'selected' if role_filter == 'citizen' else '' }}>Citizens</option>
+                                <option value="municipal" {{ 'selected' if role_filter == 'municipal' else '' }}>Municipal Officers</option>
+                                <option value="admin" {{ 'selected' if role_filter == 'admin' else '' }}>Administrators</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="status_filter" class="form-label">Filter by Status</label>
+                            <select class="form-select" id="status_filter" name="status">
+                                <option value="all" {{ 'selected' if status_filter == 'all' else '' }}>All Status</option>
+                                <option value="active" {{ 'selected' if status_filter == 'active' else '' }}>Active</option>
+                                <option value="inactive" {{ 'selected' if status_filter == 'inactive' else '' }}>Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-outline-primary me-2">
+                                <i class="bi bi-funnel"></i> Filter
+                            </button>
+                            <a href="{{ url_for('admin.users') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-clockwise"></i> Reset
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-list-ul"></i>
+                        System Users
+                        <span class="badge bg-primary ms-2">{{ users|length }} users</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if users %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Department</th>
+                                        <th>Status</th>
+                                        <th>Joined</th>
+                                        <th>Last Login</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in users %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-primary text-white rounded-circle p-2 me-3">
+                                                    <i class="bi bi-person"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">{{ user.name }}</div>
+                                                    {% if user.id == current_user.id %}
+                                                        <small class="text-muted">(You)</small>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ user.email }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ 'primary' if user.role == 'citizen' else 'success' if user.role == 'municipal' else 'warning' }}">
+                                                {{ user.role.title() }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if user.department %}
+                                                {{ user.department|get_department_name }}
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if user.is_active %}
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-circle"></i> Active
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-danger">
+                                                    <i class="bi bi-x-circle"></i> Inactive
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <small>{{ user.created_at|datetime('%Y-%m-%d') }}</small>
+                                        </td>
+                                        <td>
+                                            {% if user.last_login %}
+                                                <small>{{ user.last_login|relativetime }}</small>
+                                            {% else %}
+                                                <span class="text-muted">Never</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ url_for('admin.edit_user', id=user.id) }}"
+                                                   class="btn btn-sm btn-outline-primary" title="Edit User">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                {% if user.id != current_user.id %}
+                                                <form method="POST"
+                                                      action="{{ url_for('admin.delete_user', id=user.id) }}"
+                                                      class="d-inline"
+                                                      onsubmit="return confirm('Are you sure you want to delete user {{ user.name }}? This action cannot be undone.')">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete User">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-people text-muted" style="font-size: 4rem;"></i>
+                            <h5 class="mt-3 text-muted">No users found</h5>
+                            <p class="text-muted">
+                                {% if role_filter != 'all' or status_filter != 'all' %}
+                                    No users match the current filters.
+                                    <a href="{{ url_for('admin.users') }}">Show all users</a>
+                                {% else %}
+                                    No users in the system yet.
+                                    <a href="{{ url_for('auth.register') }}">Add the first user</a>
+                                {% endif %}
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

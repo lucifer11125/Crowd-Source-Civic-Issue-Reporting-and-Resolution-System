@@ -1,0 +1,328 @@
+{% extends "base.html" %}
+
+{% block title %}Update Complaint #{{ complaint.id }} - Civic Complaint Management System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ url_for('complaints.view_complaint', id=complaint.id) }}">Complaint #{{ complaint.id }}</a>
+                    </li>
+                    <li class="breadcrumb-item active">Update Status</li>
+                </ol>
+            </nav>
+            <h2 class="mb-1">
+                <i class="bi bi-pencil text-primary"></i>
+                Update Complaint Status
+                <span class="badge bg-secondary ms-2">#{{ complaint.id }}</span>
+            </h2>
+        </div>
+        <div class="col-auto">
+            <a href="{{ url_for('complaints.view_complaint', id=complaint.id) }}"
+               class="btn btn-outline-secondary btn-lg">
+                <i class="bi bi-arrow-left"></i> Back to Complaint
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-gear"></i>
+                        Status Update Form
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" id="updateForm">
+                        <!-- Current Status Display -->
+                        <div class="alert alert-info mb-4">
+                            <h6 class="alert-heading">Current Status</h6>
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-{{ complaint.status|status_badge_class }} me-3">
+                                    {{ complaint.status.replace('_', ' ').title() }}
+                                </span>
+                                <span class="text-muted">Last updated: {{ complaint.updated_at|relativetime }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Status Selection -->
+                        <div class="mb-4">
+                            <label for="status" class="form-label fw-bold">
+                                <i class="bi bi-flag text-primary"></i>
+                                New Status *
+                            </label>
+                            <select class="form-select form-select-lg" id="status" name="status" required>
+                                <option value="">Select new status</option>
+                                {% for status in ['submitted', 'in_progress', 'resolved', 'rejected'] %}
+                                    <option value="{{ status }}"
+                                            {% if status == complaint.status %}disabled{% endif %}>
+                                        {% if status == 'submitted' %}📝 Submitted{% endif %}
+                                        {% if status == 'in_progress' %}⚡ In Progress{% endif %}
+                                        {% if status == 'resolved' %}✅ Resolved{% endif %}
+                                        {% if status == 'rejected' %}❌ Rejected{% endif %}
+                                        {% if status == complaint.status %} (Current){% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Update Note -->
+                        <div class="mb-4">
+                            <label for="note" class="form-label fw-bold">
+                                <i class="bi bi-chat-left-text text-info"></i>
+                                Update Note
+                            </label>
+                            <textarea class="form-control" id="note" name="note" rows="4"
+                                      placeholder="Provide details about this status update. This will be visible to the citizen and added to the complaint timeline."></textarea>
+                            <div class="form-text">
+                                Explain what actions were taken or what the citizen should expect next.
+                            </div>
+                        </div>
+
+                        <!-- Resolution Notes (shown only when status is resolved) -->
+                        <div class="mb-4" id="resolutionNotesSection" style="display: none;">
+                            <label for="resolution_notes" class="form-label fw-bold text-success">
+                                <i class="bi bi-check-circle"></i>
+                                Resolution Details
+                            </label>
+                            <textarea class="form-control" id="resolution_notes" name="resolution_notes" rows="3"
+                                      placeholder="Describe how the issue was resolved. This information will help citizens understand the solution."></textarea>
+                            <div class="form-text">
+                                Final resolution details that will be permanently recorded.
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary btn-lg w-100" id="submitBtn">
+                                    <i class="bi bi-check-circle"></i> Update Status
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{{ url_for('complaints.view_complaint', id=complaint.id) }}"
+                                   class="btn btn-outline-secondary btn-lg w-100">
+                                    <i class="bi bi-x-circle"></i> Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar with Quick Actions and Info -->
+        <div class="col-lg-4">
+            <!-- Quick Status Actions -->
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0">
+                        <i class="bi bi-lightning"></i>
+                        Quick Actions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        {% if complaint.status == 'submitted' %}
+                            <button type="button" class="btn btn-outline-primary"
+                                    onclick="quickStatusUpdate('in_progress')">
+                                <i class="bi bi-play-circle"></i> Start Working
+                            </button>
+                        {% endif %}
+
+                        {% if complaint.status == 'in_progress' %}
+                            <button type="button" class="btn btn-outline-success"
+                                    onclick="quickStatusUpdate('resolved')">
+                                <i class="bi bi-check-circle"></i> Mark Resolved
+                            </button>
+                            <button type="button" class="btn btn-outline-warning"
+                                    onclick="quickStatusUpdate('submitted')">
+                                <i class="bi bi-arrow-counterclockwise"></i> Return to Submitted
+                            </button>
+                        {% endif %}
+
+                        {% if complaint.status in ['submitted', 'in_progress'] %}
+                            <button type="button" class="btn btn-outline-danger"
+                                    onclick="quickStatusUpdate('rejected')">
+                                <i class="bi bi-x-circle"></i> Reject Complaint
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complaint Summary -->
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0">
+                        <i class="bi bi-info-circle"></i>
+                        Complaint Summary
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Category</label>
+                        <p class="mb-0 fw-bold">{{ complaint.category|get_category_name }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Priority</label>
+                        <p class="mb-0">
+                            <span class="badge bg-{{ complaint.priority|priority_badge_class }}">
+                                {{ complaint.priority.title() }}
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Address</label>
+                        <p class="mb-0 small">{{ complaint.address }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Submitted By</label>
+                        <p class="mb-0">
+                            <strong>{{ complaint.user.name }}</strong>
+                            <br>
+                            <small class="text-muted">{{ complaint.user.email }}</small>
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="form-label text-muted">Submitted</label>
+                        <p class="mb-0 small">{{ complaint.created_at|datetime }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Guidelines -->
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0">
+                        <i class="bi bi-question-circle"></i>
+                        Status Guidelines
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="small">
+                        <div class="mb-2">
+                            <strong>In Progress:</strong>
+                            <span class="text-muted">Use when you've started working on the issue.</span>
+                        </div>
+                        <div class="mb-2">
+                            <strong>Resolved:</strong>
+                            <span class="text-muted">Use only when the issue is completely fixed.</span>
+                        </div>
+                        <div class="mb-2">
+                            <strong>Rejected:</strong>
+                            <span class="text-muted">Use if the complaint is invalid or cannot be addressed.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Show/hide resolution notes based on status selection
+document.getElementById('status').addEventListener('change', function() {
+    const resolutionSection = document.getElementById('resolutionNotesSection');
+    const resolutionNotes = document.getElementById('resolution_notes');
+
+    if (this.value === 'resolved') {
+        resolutionSection.style.display = 'block';
+        resolutionNotes.required = true;
+    } else {
+        resolutionSection.style.display = 'none';
+        resolutionNotes.required = false;
+        resolutionNotes.value = '';
+    }
+});
+
+// Quick status update
+function quickStatusUpdate(newStatus) {
+    const statusSelect = document.getElementById('status');
+    const noteField = document.getElementById('note');
+    const resolutionField = document.getElementById('resolution_notes');
+
+    statusSelect.value = newStatus;
+
+    // Set default notes based on status
+    switch(newStatus) {
+        case 'in_progress':
+            noteField.value = 'Started working on this complaint. Will provide updates as progress is made.';
+            break;
+        case 'resolved':
+            noteField.value = 'Issue has been successfully resolved.';
+            resolutionField.focus();
+            break;
+        case 'rejected':
+            noteField.value = 'This complaint cannot be addressed. Please see detailed explanation.';
+            break;
+        case 'submitted':
+            noteField.value = 'Returning to submitted status for further review.';
+            break;
+    }
+
+    // Show resolution notes if resolved
+    if (newStatus === 'resolved') {
+        document.getElementById('resolutionNotesSection').style.display = 'block';
+    }
+
+    // Scroll to form
+    document.getElementById('updateForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Form validation
+document.getElementById('updateForm').addEventListener('submit', function(e) {
+    const status = document.getElementById('status').value;
+    const note = document.getElementById('note').value.trim();
+    const resolutionNotes = document.getElementById('resolution_notes').value.trim();
+
+    if (!status) {
+        e.preventDefault();
+        alert('Please select a new status.');
+        return;
+    }
+
+    if (!note) {
+        e.preventDefault();
+        alert('Please provide an update note to explain the status change.');
+        return;
+    }
+
+    if (status === 'resolved' && !resolutionNotes) {
+        e.preventDefault();
+        alert('Please provide resolution details when marking a complaint as resolved.');
+        return;
+    }
+
+    // Show loading state
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Updating...';
+
+    // Confirmation for rejection
+    if (status === 'rejected') {
+        if (!confirm('Are you sure you want to reject this complaint? This action cannot be easily undone.')) {
+            e.preventDefault();
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="bi bi-check-circle"></i> Update Status';
+                    return;
+        }
+    }
+});
+</script>
+{% endblock %}

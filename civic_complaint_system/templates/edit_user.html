@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Edit User - Civic Complaint Management System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-person-gear"></i>
+                        Edit User: {{ user.name }}
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="name" name="name"
+                                       value="{{ user.name }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                       value="{{ user.email }}" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="role" class="form-label">Role *</label>
+                                <select class="form-select" id="role" name="role" required>
+                                    <option value="citizen" {{ 'selected' if user.role == 'citizen' else '' }}>Citizen</option>
+                                    <option value="municipal" {{ 'selected' if user.role == 'municipal' else '' }}>Municipal Officer</option>
+                                    <option value="admin" {{ 'selected' if user.role == 'admin' else '' }}>Administrator</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="department" class="form-label">Department</label>
+                                <select class="form-select" id="department" name="department">
+                                    <option value="">Select Department</option>
+                                    <option value="roads" {{ 'selected' if user.department == 'roads' else '' }}>Roads & Transportation</option>
+                                    <option value="water" {{ 'selected' if user.department == 'water' else '' }}>Water Supply & Drainage</option>
+                                    <option value="sanitation" {{ 'selected' if user.department == 'sanitation' else '' }}>Sanitation & Waste Management</option>
+                                    <option value="general" {{ 'selected' if user.department == 'general' else '' }}>General Administration</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="is_active" name="is_active"
+                                       {{ 'checked' if user.is_active else '' }}>
+                                <label class="form-check-label" for="is_active">
+                                    Account Active
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="bi bi-check-circle"></i> Save Changes
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{{ url_for('admin.users') }}" class="btn btn-outline-secondary btn-lg w-100">
+                                    <i class="bi bi-arrow-left"></i> Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

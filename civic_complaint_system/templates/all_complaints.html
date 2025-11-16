@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% block title %}All Complaints - Civic Complaint Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-1">
+                <i class="bi bi-list-ul text-primary"></i>
+                All Complaints
+            </h2>
+            <p class="text-muted mb-0">Complete overview of all system complaints</p>
+        </div>
+        <div class="col-auto">
+            <div class="btn-group">
+                <a href="{{ url_for('admin.reports') }}" class="btn btn-outline-success">
+                    <i class="bi bi-file-earmark-text"></i> Generate Reports
+                </a>
+                <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-funnel"></i>
+                        Filters
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="status_filter" class="form-label">Status</label>
+                            <select class="form-select" id="status_filter" name="status">
+                                <option value="all" {{ 'selected' if status_filter == 'all' else '' }}>All Status</option>
+                                <option value="submitted" {{ 'selected' if status_filter == 'submitted' else '' }}>Submitted</option>
+                                <option value="in_progress" {{ 'selected' if status_filter == 'in_progress' else '' }}>In Progress</option>
+                                <option value="resolved" {{ 'selected' if status_filter == 'resolved' else '' }}>Resolved</option>
+                                <option value="rejected" {{ 'selected' if status_filter == 'rejected' else '' }}>Rejected</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="category_filter" class="form-label">Category</label>
+                            <select class="form-select" id="category_filter" name="category">
+                                <option value="all" {{ 'selected' if category_filter == 'all' else '' }}>All Categories</option>
+                                <option value="potholes" {{ 'selected' if category_filter == 'potholes' else '' }}>Potholes</option>
+                                <option value="streetlight" {{ 'selected' if category_filter == 'streetlight' else '' }}>Street Light</option>
+                                <option value="garbage" {{ 'selected' if category_filter == 'garbage' else '' }}>Garbage</option>
+                                <option value="water_supply" {{ 'selected' if category_filter == 'water_supply' else '' }}>Water Supply</option>
+                                <option value="drainage" {{ 'selected' if category_filter == 'drainage' else '' }}>Drainage</option>
+                                <option value="other" {{ 'selected' if category_filter == 'other' else '' }}>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="department_filter" class="form-label">Department</label>
+                            <select class="form-select" id="department_filter" name="department">
+                                <option value="all" {{ 'selected' if department_filter == 'all' else '' }}>All Departments</option>
+                                {% for dept in departments %}
+                                    <option value="{{ dept }}" {{ 'selected' if department_filter == dept else '' }}>
+                                        {{ dept|get_department_name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-search"></i> Apply Filters
+                                </button>
+                                <a href="{{ url_for('admin.all_complaints') }}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-clockwise"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Complaints Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clipboard-data"></i>
+                        Complaints
+                        <span class="badge bg-primary ms-2">{{ complaints|length }}</span>
+                    </h5>
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-outline-secondary" onclick="exportTable()">
+                            <i class="bi bi-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if complaints %}
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="complaintsTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Date</th>
+                                        <th>Citizen</th>
+                                        <th>Category</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Department</th>
+                                        <th>Address</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for complaint in complaints %}
+                                    <tr>
+                                        <td>
+                                            <strong>#{{ complaint.id }}</strong>
+                                        </td>
+                                        <td>{{ complaint.created_at|datetime('%Y-%m-%d') }}</td>
+                                        <td>
+                                            <div>
+                                                <strong>{{ complaint.user.name }}</strong><br>
+                                                <small class="text-muted">{{ complaint.user.email }}</small>
+                                            </div>
+                                        </td>
+                                        <td>{{ complaint.category|get_category_name }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ complaint.priority|priority_badge_class }}">
+                                                {{ complaint.priority.title() }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ complaint.status|status_badge_class }}">
+                                                {{ complaint.status.replace('_', ' ').title() }}
+                                            </span>
+                                        </td>
+                                        <td>{{ complaint.assigned_department|get_department_name if complaint.assigned_department else 'Unassigned' }}</td>
+                                        <td>
+                                            <small>{{ complaint.address[:30] }}{% if complaint.address|length > 30 %}...{% endif %}</small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="{{ url_for('complaints.view_complaint', id=complaint.id) }}"
+                                                   class="btn btn-outline-primary btn-sm">
+                                                    <i class="bi bi-eye"></i> View
+                                                </a>
+                                                <a href="{{ url_for('complaints.edit_complaint', id=complaint.id) }}"
+                                                   class="btn btn-outline-secondary btn-sm">
+                                                    <i class="bi bi-pencil"></i> Edit
+                                                </a>
+                                                {% if complaint.status in ['submitted', 'in_progress'] %}
+                                                <form method="POST" action="{{ url_for('admin.notify_department', id=complaint.id) }}" class="d-inline">
+                                                    <button type="submit" class="btn btn-outline-warning btn-sm"
+                                                            onclick="return confirm('Notify department about this pending complaint?')">
+                                                        <i class="bi bi-bell"></i> Notify
+                                                    </button>
+                                                </form>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination could be added here if needed -->
+                        {% if complaints|length > 50 %}
+                        <div class="mt-3 text-center">
+                            <small class="text-muted">Showing {{ complaints|length }} complaints</small>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-clipboard-x text-muted" style="font-size: 4rem;"></i>
+                            <h5 class="mt-3 text-muted">No complaints found</h5>
+                            <p class="text-muted">
+                                No complaints match the current filters. Try adjusting the filter criteria.
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Export table functionality
+function exportTable() {
+    const table = document.getElementById('complaintsTable');
+    if (!table) return;
+
+    let csv = [];
+    const rows = table.querySelectorAll('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const row = [];
+        const cols = rows[i].querySelectorAll('td, th');
+
+        for (let j = 0; j < cols.length; j++) {
+            // Skip the Actions column for export
+            if (j === cols.length - 1 && i > 0) continue;
+
+            let text = cols[j].textContent.trim();
+            // Remove extra whitespace and line breaks
+            text = text.replace(/\s+/g, ' ');
+            // Escape quotes
+            if (text.includes(',')) {
+                text = '"' + text + '"';
+            }
+            row.push(text);
+        }
+        csv.push(row.join(','));
+    }
+
+    const csvContent = csv.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'all_complaints.csv');
+    link.style.visibility = 'hidden';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Table sorting functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const table = document.getElementById('complaintsTable');
+    if (!table) return;
+
+    const headers = table.querySelectorAll('th');
+    headers.forEach((header, index) => {
+        if (index < headers.length - 1) { // Don't sort Actions column
+            header.style.cursor = 'pointer';
+            header.addEventListener('click', function() {
+                sortTable(table, index);
+            });
+        }
+    });
+});
+
+function sortTable(table, column) {
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+
+    rows.sort((a, b) => {
+        const aText = a.children[column].textContent.trim().toLowerCase();
+        const bText = b.children[column].textContent.trim().toLowerCase();
+
+        if (column === 0) { // ID column - numeric sort
+            return parseInt(aText.replace('#', '')) - parseInt(bText.replace('#', ''));
+        }
+
+        return aText.localeCompare(bText);
+    });
+
+    // Re-append sorted rows
+    rows.forEach(row => tbody.appendChild(row));
+}
+</script>
+{% endblock %}

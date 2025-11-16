@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Civic Complaint Management System{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Report Civic Issues Easily</h1>
+                <p class="lead mb-4">
+                    Join our community-driven platform to report and track civic complaints.
+                    From potholes to water supply issues, we help make our city better together.
+                </p>
+                {% if not current_user.is_authenticated %}
+                    <div class="d-flex gap-3">
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">
+                            <i class="bi bi-person-plus"></i> Get Started
+                        </a>
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </a>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-light btn-lg">
+                        <i class="bi bi-speedometer2"></i> Go to Dashboard
+                    </a>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="bi bi-building" style="font-size: 12rem; opacity: 0.8;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- How It Works Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">How It Works</h2>
+            <p class="lead text-muted">Simple 3-step process to report civic issues</p>
+        </div>
+        <div class="row">
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-box">
+                    <div class="feature-icon bg-primary text-white rounded-circle mx-auto mb-3"
+                         style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-pencil-square" style="font-size: 2rem;"></i>
+                    </div>
+                    <h4>1. Submit Complaint</h4>
+                    <p class="text-muted">
+                        Fill out our simple form with details about the issue,
+                        location, and attach photos if available.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-box">
+                    <div class="feature-icon bg-success text-white rounded-circle mx-auto mb-3"
+                         style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-person-check" style="font-size: 2rem;"></i>
+                    </div>
+                    <h4>2. Auto-Assignment</h4>
+                    <p class="text-muted">
+                        Your complaint is automatically assigned to the appropriate
+                        municipal department based on the issue type.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center mb-4">
+                <div class="feature-box">
+                    <div class="feature-icon bg-warning text-white rounded-circle mx-auto mb-3"
+                         style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-eye" style="font-size: 2rem;"></i>
+                    </div>
+                    <h4>3. Track Progress</h4>
+                    <p class="text-muted">
+                        Monitor the status of your complaint in real-time and
+                        receive updates as the issue progresses toward resolution.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- What Issues Can Be Reported Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">What Issues Can Be Reported?</h2>
+            <p class="lead text-muted">We handle a wide range of civic problems to improve our community</p>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-4 text-center">
+                                <i class="bi bi-exclamation-triangle text-danger" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="col-8">
+                                <h5>Road & Infrastructure</h5>
+                                <ul class="list-unstyled mb-0">
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Potholes and road damage</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Broken streetlights</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Drainage problems</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Traffic signal issues</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-4 text-center">
+                                <i class="bi bi-house text-primary" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="col-8">
+                                <h5>Public Services</h5>
+                                <ul class="list-unstyled mb-0">
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Garbage collection</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Water supply issues</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Sewage problems</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Public facility maintenance</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-4 text-center">
+                                <i class="bi bi-tree text-success" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="col-8">
+                                <h5>Environmental Issues</h5>
+                                <ul class="list-unstyled mb-0">
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Illegal dumping</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Tree maintenance</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Pollution complaints</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Park maintenance</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-4 text-center">
+                                <i class="bi bi-three-dots text-secondary" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="col-8">
+                                <h5>Other Issues</h5>
+                                <ul class="list-unstyled mb-0">
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Noise complaints</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Public safety concerns</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Building code violations</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Any other civic issues</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Before & After</h2>
+            <p class="lead text-muted">See how reported issues get resolved</p>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='images/download.jpeg') }}" class="card-img-top" alt="Road Repairs">
+                    <div class="card-body">
+                        <h5 class="card-title">Road Repairs</h5>
+                        <p class="card-text">Potholes and road damage are quickly identified and repaired by our municipal teams.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='images/download (1).jpeg') }}" class="card-img-top" alt="Street Lighting">
+                    <div class="card-body">
+                        <h5 class="card-title">Street Lighting</h5>
+                        <p class="card-text">Broken streetlights are reported and fixed to ensure public safety and visibility.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ url_for('static', filename='images/download (2).jpeg') }}" class="card-img-top" alt="Clean Environment">
+                    <div class="card-body">
+                        <h5 class="card-title">Clean Environment</h5>
+                        <p class="card-text">Garbage and waste issues are addressed promptly to maintain clean public spaces.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">What Citizens Say</h2>
+            <p class="lead text-muted">Hear from our community members</p>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <i class="bi bi-person-circle text-primary" style="font-size: 3rem;"></i>
+                        </div>
+                        <p class="card-text text-center">"The pothole on my street was fixed within a week of reporting it. This system really works!"</p>
+                        <div class="text-center">
+                            <strong>- Sarah Johnson</strong>
+                            <br>
+                            <small class="text-muted">Local Resident</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <i class="bi bi-person-circle text-success" style="font-size: 3rem;"></i>
+                        </div>
+                        <p class="card-text text-center">"I love being able to track the progress of my complaints. The municipal team is very responsive."</p>
+                        <div class="text-center">
+                            <strong>- Michael Chen</strong>
+                            <br>
+                            <small class="text-muted">Business Owner</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <i class="bi bi-person-circle text-info" style="font-size: 3rem;"></i>
+                        </div>
+                        <p class="card-text text-center">"Reporting issues has never been easier. The photo upload feature helps explain problems clearly."</p>
+                        <div class="text-center">
+                            <strong>- Emily Rodriguez</strong>
+                            <br>
+                            <small class="text-muted">Community Member</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

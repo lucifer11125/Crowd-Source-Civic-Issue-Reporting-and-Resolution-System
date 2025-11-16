@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+
+{% block title %}Submit New Complaint - Civic Complaint Management System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-plus-circle"></i>
+                        Submit New Complaint
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" enctype="multipart/form-data" id="complaintForm">
+                        <!-- Category Selection -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="category" class="form-label fw-bold">
+                                    <i class="bi bi-tag text-primary"></i>
+                                    Category *
+                                </label>
+                                <select class="form-select form-select-lg" id="category" name="category" required>
+                                    <option value="">Select a category</option>
+                                    <option value="potholes" {{ 'selected' if category == 'potholes' else '' }}>
+                                        🚧 Potholes & Road Damage
+                                    </option>
+                                    <option value="streetlight" {{ 'selected' if category == 'streetlight' else '' }}>
+                                        💡 Street Light Issues
+                                    </option>
+                                    <option value="garbage" {{ 'selected' if category == 'garbage' else '' }}>
+                                        🗑️ Garbage Collection
+                                    </option>
+                                    <option value="water_supply" {{ 'selected' if category == 'water_supply' else '' }}>
+                                        💧 Water Supply Issues
+                                    </option>
+                                    <option value="drainage" {{ 'selected' if category == 'drainage' else '' }}>
+                                        🌊 Drainage Problems
+                                    </option>
+                                    <option value="other" {{ 'selected' if category == 'other' else '' }}>
+                                        📋 Other Issues
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="priority" class="form-label fw-bold">
+                                    <i class="bi bi-exclamation-triangle text-warning"></i>
+                                    Priority Level *
+                                </label>
+                                <select class="form-select form-select-lg" id="priority" name="priority" required>
+                                    <option value="">Select priority</option>
+                                    <option value="high" {{ 'selected' if priority == 'high' else '' }}>
+                                        🔴 High - Urgent attention required
+                                    </option>
+                                    <option value="medium" {{ 'selected' if priority == 'medium' else '' }}>
+                                        🟡 Medium - Normal priority
+                                    </option>
+                                    <option value="low" {{ 'selected' if priority == 'low' else '' }}>
+                                        🟢 Low - Can be addressed later
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label for="description" class="form-label fw-bold">
+                                <i class="bi bi-card-text text-primary"></i>
+                                Detailed Description *
+                            </label>
+                            <textarea class="form-control" id="description" name="description" rows="4"
+                                      placeholder="Please provide a detailed description of the issue. Include as much information as possible to help us understand and address the problem."
+                                      required>{{ description or '' }}</textarea>
+                            <div class="form-text">
+                                <span id="charCount">0</span> characters (minimum 10 required)
+                            </div>
+                        </div>
+
+                        <!-- Location Information -->
+                        <div class="row mb-4">
+                            <div class="col-md-8">
+                                <label for="address" class="form-label fw-bold">
+                                    <i class="bi bi-geo-alt text-danger"></i>
+                                    Address *
+                                </label>
+                                <input type="text" class="form-control form-control-lg" id="address" name="address"
+                                       placeholder="Enter the exact address or location of the issue"
+                                       value="{{ address or '' }}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="landmark" class="form-label fw-bold">
+                                    <i class="bi bi-pin-map text-info"></i>
+                                    Nearby Landmark
+                                </label>
+                                <input type="text" class="form-control" id="landmark" name="landmark"
+                                       placeholder="Optional landmark"
+                                       value="{{ landmark or '' }}">
+                            </div>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="mb-4">
+                            <label for="image" class="form-label fw-bold">
+                                <i class="bi bi-camera text-success"></i>
+                                Upload Photo (Optional)
+                            </label>
+                            <div class="border border-dashed rounded p-4 text-center bg-light" id="dropZone">
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*"
+                                       style="display: none;">
+                                <div id="uploadPrompt">
+                                    <i class="bi bi-cloud-upload text-muted" style="font-size: 3rem;"></i>
+                                    <p class="mb-2">Drag and drop an image here or click to browse</p>
+                                    <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('image').click()">
+                                        <i class="bi bi-folder2-open"></i> Choose File
+                                    </button>
+                                    <div class="text-muted small mt-2">
+                                        Supported formats: PNG, JPG, JPEG, GIF (Max size: 5MB)
+                                    </div>
+                                </div>
+                                <div id="imagePreview" style="display: none;">
+                                    <img id="previewImg" src="" alt="Preview" class="img-fluid mb-2" style="max-height: 200px;">
+                                    <div class="mt-2">
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeImage()">
+                                            <i class="bi bi-trash"></i> Remove Image
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary ms-2" onclick="document.getElementById('image').click()">
+                                            <i class="bi bi-pencil"></i> Change Image
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="{{ url_for('complaints.citizen_dashboard') }}" class="btn btn-outline-secondary btn-lg w-100">
+                                    <i class="bi bi-arrow-left"></i> Cancel
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary btn-lg w-100" id="submitBtn">
+                                    <i class="bi bi-send"></i> Submit Complaint
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Information Card -->
+            <div class="card mt-4 bg-light">
+                <div class="card-body">
+                    <h6 class="card-title">
+                        <i class="bi bi-info-circle text-primary"></i>
+                        What Happens Next?
+                    </h6>
+                    <ol class="mb-0">
+                        <li>Your complaint will be automatically assigned to the appropriate municipal department based on the category.</li>
+                        <li>You'll receive an email confirmation with your complaint details and tracking number.</li>
+                        <li>A municipal officer will review your complaint and take appropriate action.</li>
+                        <li>You can track the status of your complaint in real-time on your dashboard.</li>
+                        <li>You'll receive notifications when the status of your complaint changes.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Character counter for description
+document.getElementById('description').addEventListener('input', function() {
+    const charCount = this.value.length;
+    const charCountElement = document.getElementById('charCount');
+    charCountElement.textContent = charCount;
+
+    if (charCount < 10) {
+        charCountElement.className = 'text-danger';
+    } else if (charCount > 500) {
+        charCountElement.className = 'text-warning';
+    } else {
+        charCountElement.className = 'text-success';
+    }
+});
+
+// Image upload functionality
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('image');
+const uploadPrompt = document.getElementById('uploadPrompt');
+const imagePreview = document.getElementById('imagePreview');
+const previewImg = document.getElementById('previewImg');
+
+// Click to upload
+dropZone.addEventListener('click', function(e) {
+    if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
+        fileInput.click();
+    }
+});
+
+// Drag and drop
+dropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    this.classList.add('border-primary', 'bg-light');
+});
+
+dropZone.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    this.classList.remove('border-primary', 'bg-light');
+});
+
+dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    this.classList.remove('border-primary', 'bg-light');
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        handleFileSelect(files[0]);
+    }
+});
+
+// File input change
+fileInput.addEventListener('change', function(e) {
+    if (e.target.files.length > 0) {
+        handleFileSelect(e.target.files[0]);
+    }
+});
+
+function handleFileSelect(file) {
+    // Validate file type
+    const allowedTypes = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+        alert('Invalid file type. Please select PNG, JPG, JPEG, or GIF files only.');
+        return;
+    }
+
+    // Validate file size (5MB max)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+        alert('File size too large. Please select an image smaller than 5MB.');
+        return;
+    }
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        previewImg.src = e.target.result;
+        uploadPrompt.style.display = 'none';
+        imagePreview.style.display = 'block';
+        dropZone.classList.remove('border-dashed');
+        dropZone.classList.add('border-success');
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeImage() {
+    fileInput.value = '';
+    previewImg.src = '';
+    uploadPrompt.style.display = 'block';
+    imagePreview.style.display = 'none';
+    dropZone.classList.add('border-dashed');
+    dropZone.classList.remove('border-success');
+}
+
+// Form validation and submission
+document.getElementById('complaintForm').addEventListener('submit', function(e) {
+    const description = document.getElementById('description').value;
+    const address = document.getElementById('address').value;
+    const category = document.getElementById('category').value;
+    const priority = document.getElementById('priority').value;
+
+    // Client-side validation
+    if (description.length < 10) {
+        e.preventDefault();
+        alert('Please provide a more detailed description (minimum 10 characters).');
+        return;
+    }
+
+    if (address.length < 5) {
+        e.preventDefault();
+        alert('Please provide a valid address.');
+        return;
+    }
+
+    if (!category) {
+        e.preventDefault();
+        alert('Please select a complaint category.');
+        return;
+    }
+
+    if (!priority) {
+        e.preventDefault();
+        alert('Please select a priority level.');
+        return;
+    }
+
+    // Show loading state
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Submitting...';
+
+    // Form will submit normally
+});
+</script>
+{% endblock %}

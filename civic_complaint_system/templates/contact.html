@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - Civic Complaint Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary mb-4">
+                    <i class="bi bi-envelope"></i> Contact Us
+                </h1>
+                <p class="lead text-muted">
+                    Have questions or need assistance? We're here to help.
+                </p>
+            </div>
+
+            <div class="row">
+                <!-- Contact Information -->
+                <div class="col-lg-5 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <h3 class="h4 mb-4">Get In Touch</h3>
+
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-telephone text-primary me-3" style="font-size: 1.5rem;"></i>
+                                    <div>
+                                        <h6 class="mb-0">Phone</h6>
+                                        <p class="text-muted mb-0">+1 (555) 123-4567</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-envelope text-primary me-3" style="font-size: 1.5rem;"></i>
+                                    <div>
+                                        <h6 class="mb-0">Email</h6>
+                                        <p class="text-muted mb-0">support@civiccomplaint.com</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-geo-alt text-primary me-3" style="font-size: 1.5rem;"></i>
+                                    <div>
+                                        <h6 class="mb-0">Address</h6>
+                                        <p class="text-muted mb-0">123 Civic Center Drive<br>City, State 12345</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-clock text-primary me-3" style="font-size: 1.5rem;"></i>
+                                    <div>
+                                        <h6 class="mb-0">Hours</h6>
+                                        <p class="text-muted mb-0">Mon-Fri: 9AM-6PM<br>Sat: 10AM-4PM</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="col-lg-7">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <h3 class="h4 mb-4">Send us a Message</h3>
+
+                            <form method="POST">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="name" class="form-label">Name *</label>
+                                        <input type="text" class="form-control" id="name" name="name" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email *</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="subject" class="form-label">Subject *</label>
+                                    <input type="text" class="form-control" id="subject" name="subject" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="message" class="form-label">Message *</label>
+                                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-send"></i> Send Message
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="card shadow-sm mt-5">
+                <div class="card-body p-4">
+                    <h3 class="h4 mb-4 text-center">Frequently Asked Questions</h3>
+
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    How do I submit a complaint?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    To submit a complaint, first register for an account, then log in and click "Submit New Complaint" from your dashboard. Fill out the form with details about the issue.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    How long does it take to resolve a complaint?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Resolution times vary depending on the type and complexity of the issue. Most complaints are addressed within 7-14 days, but some may take longer.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    Can I upload photos with my complaint?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes! You can upload up to 5 photos (max 5MB each) when submitting a complaint to help municipal officers better understand the issue.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                    How do I track my complaint status?
+                                </button>
+                            </h2>
+                            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Log in to your account and visit your dashboard. You'll see all your complaints with their current status and can click on any complaint to view detailed updates.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
